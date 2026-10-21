@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Offline-first, client-side Markdown resume builder with 1:1 print fidelity, ATS compliance linting, interactive HTML website exports, and exact Word/PDF exports.">
+  <meta name="theme-color" content="#0b1120">
+  <title>Resume Builder — Professional Markdown SPA</title>
+
+  <!-- Web App Manifest for PWA -->
+  <link rel="manifest" href="./manifest.json">
+
+  <!-- Self-hosted Offline Fonts -->
+  <link rel="stylesheet" href="./vendor/fonts/fonts.css">
+
+  <!-- Core App Stylesheets -->
+  <link rel="stylesheet" href="./styles/main.css">
+  <link rel="stylesheet" href="./styles/preview-engine.css">
+  <link rel="stylesheet" href="./styles/print.css">
+
+  <!-- All 12 Template Stylesheets -->
+  <link rel="stylesheet" href="./styles/templates/modern-minimal.css">
+  <link rel="stylesheet" href="./styles/templates/classic-ivy.css">
+  <link rel="stylesheet" href="./styles/templates/executive-compact.css">
+  <link rel="stylesheet" href="./styles/templates/split-sidebar.css">
+  <link rel="stylesheet" href="./styles/templates/tech-mono.css">
+  <link rel="stylesheet" href="./styles/templates/swiss-grid.css">
+  <link rel="stylesheet" href="./styles/templates/academic-cv.css">
+  <link rel="stylesheet" href="./styles/templates/creative-accent.css">
+  <link rel="stylesheet" href="./styles/templates/nordic-clean.css">
+  <link rel="stylesheet" href="./styles/templates/modern-timeline.css">
+  <link rel="stylesheet" href="./styles/templates/bold-editorial.css">
+  <link rel="stylesheet" href="./styles/templates/ats-standard.css">
+</head>
+<body>
+  <a href="#markdown-editor-input" class="skip-link">Skip to Editor</a>
+  <div id="app-container">
+    <!-- Top Studio Header -->
+    <header id="app-toolbar">
+      <div class="toolbar-left">
+        <div class="app-brand" title="ResumeBuilder Studio">
+          <svg class="brand-svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span class="brand-text">ResumeBuilder</span>
+        </div>
+
+        <div class="title-status-group">
+          <input type="text" id="doc-title-input" class="doc-title-input" value="Software Engineer Resume" title="Click to rename resume" aria-label="Resume Title">
+          <button id="quick-save-btn" class="btn btn-xs btn-outline-primary" title="Save document now (Ctrl+S)">
+            💾 Save
+          </button>
+          <span id="save-status-indicator" class="save-status-badge" title="Auto-saved to local browser storage">Saved</span>
+        </div>
+
+        <button id="new-resume-wizard-btn" class="btn btn-sm btn-outline-primary" title="Create New Resume (Alt+N)">
+          + New
+        </button>
+
+        <button id="workspace-toggle-btn" class="btn btn-sm btn-secondary" title="Manage Saved Resumes & 50-Version Checkpoints" aria-expanded="false" aria-controls="workspace-drawer">
+          📂 Resumes
+        </button>
+      </div>
+
+      <div class="toolbar-center">
+        <!-- View Mode Segmented Controls -->
+        <div class="btn-group" role="group" aria-label="Editor View Mode">
+          <button id="mode-split-btn" class="btn is-active" title="Split Screen (Ctrl+1)" aria-pressed="true">Split</button>
+          <button id="mode-editor-btn" class="btn" title="Editor Only (Ctrl+2)" aria-pressed="false">Editor</button>
+          <button id="mode-preview-btn" class="btn" title="Preview Only (Ctrl+3)" aria-pressed="false">Preview</button>
+        </div>
+
+        <!-- Quick Template Selector -->
+        <div class="template-selector-wrap">
+          <select id="template-select" class="form-select" title="Choose Template Style" aria-label="Select Resume Template"></select>
+        </div>
+
+        <!-- Design Studio Drawer Toggle -->
+        <button id="design-toggle-btn" class="btn btn-sm btn-secondary" title="Customize Fonts, Spacing, and Colors" aria-expanded="false" aria-controls="design-drawer">
+          🎨 Design & Theme
+        </button>
+      </div>
+
+      <div class="toolbar-right">
+        <!-- ATS Score Pill -->
+        <button id="ats-score-pill" class="status-pill pill-good" title="Open ATS Readiness Auditor" aria-expanded="false" aria-controls="ats-drawer">
+          ATS: 100%
+        </button>
+
+        <!-- Light / Dark Studio Theme Toggle -->
+        <button id="theme-toggle-btn" class="btn-icon theme-btn" title="Toggle Light/Dark Studio Theme" aria-label="Toggle Studio Theme">
+          🌙
+        </button>
+
+        <!-- Import Button -->
+        <label for="file-import-input" class="btn btn-sm btn-secondary" title="Import .md, .txt, or .json resume">
+          📥 Import
+        </label>
+        <input type="file" id="file-import-input" accept=".md,.txt,.json" style="display: none;">
+
+        <!-- Unified Export Hub -->
+        <div class="export-menu-container">
+          <div class="export-split-btn">
+            <button id="export-pdf-btn" class="btn btn-primary" title="Print or Save as Vector PDF (Ctrl+P)">
+              🖨️ PDF
+            </button>
+            <button id="export-menu-toggle-btn" class="btn btn-primary export-caret-btn" title="More Export Formats" aria-haspopup="true" aria-expanded="false">
+              ▾
+            </button>
+          </div>
+
+          <div id="export-dropdown-menu" class="export-dropdown-menu" style="display: none;" role="menu">
+            <div class="export-menu-header">Export Resume</div>
+            
+            <button id="export-html-btn" class="export-menu-item" role="menuitem">
+              <span class="emi-icon">🌐</span>
+              <div class="emi-text">
+                <span class="emi-title">Interactive HTML Website (.html)</span>
+                <span class="emi-desc">Self-contained web portfolio with skill filters & theme switch</span>
+              </div>
+            </button>
+
+            <button id="preview-html-btn" class="export-menu-item" role="menuitem">
+              <span class="emi-icon">✨</span>
+              <div class="emi-text">
+                <span class="emi-title">Preview Web Portfolio in New Tab</span>
+                <span class="emi-desc">Test-drive the interactive website experience immediately</span>
+              </div>
+            </button>
+
+            <button id="export-pdf-menu-btn" class="export-menu-item" role="menuitem">
+              <span class="emi-icon">🖨️</span>
+              <div class="emi-text">
+                <span class="emi-title">Print / Vector PDF (Ctrl+P)</span>
+                <span class="emi-desc">1:1 calibrated paper preview via browser print</span>
+              </div>
+            </button>
+
+            <button id="export-docx-btn" class="export-menu-item" role="menuitem">
+              <span class="emi-icon">📝</span>
+              <div class="emi-text">
+                <span class="emi-title">Microsoft Word (.docx)</span>
+                <span class="emi-desc">Fully formatted OpenXML Word document</span>
+              </div>
+            </button>
+
+            <div class="export-menu-divider"></div>
+
+            <button id="export-json-btn" class="export-menu-item" role="menuitem">
+              <span class="emi-icon">{ }</span>
+              <div class="emi-text">
+                <span class="emi-title">JSON Resume (.json)</span>
+                <span class="emi-desc">Standardized JSON Resume open-source format</span>
+              </div>
+            </button>
+
+            <button id="export-md-btn" class="export-menu-item" role="menuitem">
+              <span class="emi-icon">📄</span>
+              <div class="emi-text">
+                <span class="emi-title">Raw Markdown (.md)</span>
+                <span class="emi-desc">Complete source with YAML frontmatter</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Split Pane Container -->
+    <main id="main-split-container">
+      <!-- Left Editor Pane -->
+      <section id="editor-pane" aria-label="Markdown and Frontmatter Editor">
+        <!-- Editor Authoring & Snippet Toolbar -->
+        <div id="editor-toolbar" class="editor-toolbar" role="toolbar" aria-label="Resume Authoring Tools">
+          <div class="editor-tool-group">
+            <button id="btn-edit-profile" class="editor-tool-btn editor-tool-highlight" title="Edit Contact, Name & Summary via Form Modal">
+              👤 Edit Contact
+            </button>
+          </div>
+
+          <div class="editor-tool-divider" aria-hidden="true"></div>
+
+          <div class="editor-tool-group">
+            <button class="editor-tool-btn" data-snippet="role" title="Insert Experience Role Block">+ Role</button>
+            <button class="editor-tool-btn" data-snippet="education" title="Insert Education Block">+ Edu</button>
+            <button class="editor-tool-btn" data-snippet="skills" title="Insert Skills Category Block">+ Skills</button>
+            <button class="editor-tool-btn" data-snippet="project" title="Insert Project Block">+ Project</button>
+            <button class="editor-tool-btn" data-snippet="columns" title="Insert Two-Column Directive Block">+ 2-Col</button>
+            <button class="editor-tool-btn" data-snippet="pagebreak" title="Insert Manual Page Break (+ Page)">+ Page</button>
+          </div>
+
+          <div class="editor-tool-divider" aria-hidden="true"></div>
+
+          <div class="editor-tool-group">
+            <button id="btn-fmt-bold" class="editor-tool-btn" title="Bold (Ctrl+B)"><b>B</b></button>
+            <button id="btn-fmt-italic" class="editor-tool-btn" title="Italic (Ctrl+I)"><i>I</i></button>
+            <button id="btn-fmt-link" class="editor-tool-btn" title="Insert Link">🔗</button>
+            <button id="btn-fmt-bullet" class="editor-tool-btn" title="Insert Bullet Item">• List</button>
+          </div>
+
+          <div class="editor-tool-group ms-auto">
+            <select id="editor-section-jump" class="editor-outline-select" title="Jump to Document Section" aria-label="Jump to Section">
+              <option value="">Jump to Section...</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="editor-surface">
+          <div id="editor-line-numbers" class="editor-line-numbers" aria-hidden="true"></div>
+          <textarea id="markdown-editor-input" spellcheck="false" placeholder="Write resume markdown with YAML frontmatter..." aria-label="Resume Markdown Editor"></textarea>
+        </div>
+        <footer id="editor-status-bar" class="editor-status-bar"></footer>
+      </section>
+
+      <!-- Draggable Split Divider -->
+      <div id="split-divider" class="split-divider" title="Drag to resize split panes" role="separator" aria-orientation="vertical"></div>
+
+      <!-- Right Live Preview Pane -->
+      <section id="preview-pane" aria-label="1:1 Physical Print Preview Canvas">
+        <div class="preview-sub-toolbar">
+          <div class="preview-sub-left">
+            <!-- Paper Selector -->
+            <select id="paper-select" class="form-select form-select-sm" title="Paper Size">
+              <option value="letter">Letter (8.5 × 11 in)</option>
+              <option value="a4">A4 (210 × 297 mm)</option>
+            </select>
+
+            <!-- Target Pages -->
+            <select id="target-pages-select" class="form-select form-select-sm" title="Target Page Count">
+              <option value="1">Target: 1 Page</option>
+              <option value="2">Target: 2 Pages</option>
+              <option value="3">Target: 3 Pages</option>
+            </select>
+
+            <!-- Fit to Page Solver -->
+            <button id="fit-page-btn" class="btn btn-xs btn-outline-primary" title="Automatically solve micro-spacing to fit target pages">
+              ⚡ Fit to Page
+            </button>
+
+            <!-- Undo Fit to Page -->
+            <button id="undo-fit-btn" class="btn btn-xs btn-ghost" title="Undo Fit to Page spacing changes" style="display: none;">
+              ↩ Undo
+            </button>
+          </div>
+
+          <div class="preview-page-status">
+            <span id="page-status-pill" class="status-pill page-pill-good">1.0 / 1 Page (92% full)</span>
+            <div id="page-nav-group" class="page-nav-group" style="display: none;">
+              <button id="page-prev-btn" class="btn-icon btn-xs" title="Scroll to Previous Page" aria-label="Previous Page">◀</button>
+              <span id="page-indicator-text" class="page-indicator-text">1 / 1</span>
+              <button id="page-next-btn" class="btn-icon btn-xs" title="Scroll to Next Page" aria-label="Next Page">▶</button>
+            </div>
+          </div>
+
+          <div class="preview-zoom-controls">
+            <button id="zoom-out-btn" class="btn-icon" title="Zoom Out">−</button>
+            <span id="zoom-level-span" style="min-width: 38px; text-align: center;">100%</span>
+            <button id="zoom-in-btn" class="btn-icon" title="Zoom In">+</button>
+            <button id="zoom-fit-btn" class="btn-icon" title="Fit to Preview Width">Fit</button>
+            <button id="zoom-reset-btn" class="btn-icon" title="Reset Zoom to 100%">100%</button>
+          </div>
+        </div>
+
+        <div id="preview-scroll-viewport" class="preview-scroll-viewport">
+          <div id="resume-preview-root" class="template-modern-minimal">
+            <div id="preview-canvas-wrapper" class="preview-canvas-wrapper">
+              <article id="resume-sheet" class="resume-sheet"></article>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Slidable Side Drawers -->
+    <aside id="workspace-drawer" class="side-drawer" aria-label="Saved Resumes and History"></aside>
+    <aside id="design-drawer" class="side-drawer" aria-label="Design and Typography Controls"></aside>
+    <aside id="ats-drawer" class="side-drawer" aria-label="ATS Compliance Auditor"></aside>
+
+    <!-- Backdrop overlay for drawers -->
+    <div id="drawer-backdrop" class="drawer-backdrop" aria-hidden="true"></div>
+
+    <!-- Drag & Drop Full Window Overlay -->
+    <div id="drag-drop-overlay" aria-hidden="true">
+      <div class="drag-drop-box">
+        <p>Drop your resume file here (.md, .txt, or .json)</p>
+      </div>
+    </div>
+
+    <!-- Generic Modal Backdrop for Overwrite Protection / Alerts -->
+    <div id="modal-container" style="display: none;"></div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+  </div>
+
+  <!-- Main ES Module Entry Point -->
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>

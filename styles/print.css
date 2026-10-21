@@ -1,0 +1,109 @@
+/* print.css: Strict Print Isolation and Vector PDF Fidelity */
+
+@media print {
+  /* Hide all UI Chrome and Authoring Surfaces */
+  #app-toolbar,
+  #editor-pane,
+  .editor-toolbar,
+  .editor-status-bar,
+  .preview-sub-toolbar,
+  .preview-page-status,
+  .preview-zoom-controls,
+  .side-drawer,
+  #side-drawers,
+  #ats-drawer,
+  #workspace-drawer,
+  #design-drawer,
+  .drawer-backdrop,
+  .split-divider,
+  .page-break-overlay,
+  .page-break-spacer,
+  .ui-chrome,
+  .modal-backdrop,
+  #drag-drop-overlay,
+  .toast-container,
+  .preview-toolbar,
+  .status-bar {
+    display: none !important;
+  }
+
+  /* Reset Viewport & Body */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #app-container,
+  #main-split-container,
+  #preview-pane,
+  #preview-scroll-viewport,
+  #resume-preview-root {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    transform: none !important;
+    overflow: visible !important;
+  }
+
+  .preview-canvas-wrapper {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .resume-sheet {
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 0 !important;
+    box-sizing: border-box !important;
+    page-break-after: auto;
+  }
+
+  .template-creative-accent .resume-header {
+    margin: 0 0 var(--resume-section-gap) 0 !important;
+    border-radius: 4px !important;
+  }
+
+  .resume-manual-page-break {
+    break-before: page !important;
+    page-break-before: always !important;
+    height: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    display: block !important;
+  }
+
+  /* Preserving clean hyperlinks without ugly browser link expansion */
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+
+  /* Page break rules */
+  .resume-item {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .resume-section-title {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  h1, h2, h3, h4 {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+}

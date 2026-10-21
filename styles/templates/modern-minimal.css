@@ -1,0 +1,23 @@
+/* Template 1: Modern Minimal */
+.template-modern-minimal .resume-name {
+  font-family: var(--resume-font-primary);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-size: 2.1em;
+}
+
+.template-modern-minimal .resume-section-title {
+  font-family: var(--resume-font-primary);
+  font-weight: 600;
+  font-size: 1.05em;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--resume-color-accent);
+  text-transform: uppercase;
+}
+
+.template-modern-minimal .skill-tag {
+  border-radius: 9999px;
+  padding: 1px 9px;
+  background-color: var(--resume-color-accent-tint);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}

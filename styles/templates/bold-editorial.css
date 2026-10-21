@@ -1,0 +1,74 @@
+/* Template 11: Bold Editorial */
+.template-bold-editorial {
+  font-family: var(--resume-font-primary);
+}
+
+.template-bold-editorial .resume-header {
+  border-top: 5px solid var(--resume-color-accent);
+  padding-top: 14px;
+  margin-bottom: var(--resume-section-gap);
+  display: flex;
+  flex-direction: column;
+}
+
+.template-bold-editorial .resume-name {
+  font-family: var(--resume-font-header);
+  font-size: 2.35em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--resume-color-ink);
+}
+
+.template-bold-editorial .resume-headline {
+  font-family: var(--resume-font-primary);
+  font-size: 1.1em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--resume-color-accent);
+  margin-top: 4px;
+}
+
+.template-bold-editorial .resume-contact-bar {
+  margin-top: 8px;
+  font-size: 0.9em;
+}
+
+.template-bold-editorial .resume-section-title {
+  font-family: var(--resume-font-header);
+  font-size: 1.15em;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid var(--resume-color-ink);
+  color: var(--resume-color-ink);
+  padding-bottom: 3px;
+  margin-top: var(--resume-section-gap);
+  margin-bottom: var(--resume-item-gap);
+}
+
+.template-bold-editorial .entry-title {
+  font-weight: 700;
+  font-size: 1.05em;
+  color: var(--resume-color-ink);
+}
+
+.template-bold-editorial .entry-org {
+  font-style: italic;
+  font-weight: 600;
+  color: var(--resume-color-accent);
+}
+
+.template-bold-editorial .resume-sheet ul {
+  padding-left: 1.25em;
+}
+
+.template-bold-editorial .skill-tag {
+  background-color: transparent;
+  border: 1px solid var(--resume-color-ink);
+  color: var(--resume-color-ink);
+  border-radius: 2px;
+  padding: 1px 7px;
+  font-size: 0.85em;
+  font-weight: 600;
+}

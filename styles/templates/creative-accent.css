@@ -1,0 +1,45 @@
+/* Template 8: Creative Accent */
+.template-creative-accent .resume-header {
+  background-color: var(--resume-color-accent-tint);
+  margin-left: calc(var(--resume-margin) * -1);
+  margin-right: calc(var(--resume-margin) * -1);
+  margin-top: calc(var(--resume-margin) * -1);
+  padding: calc(var(--resume-margin) * 0.75) var(--resume-margin);
+  border-bottom: 3px solid var(--resume-color-accent);
+  margin-bottom: var(--resume-section-gap);
+}
+
+.template-creative-accent .resume-name {
+  color: var(--resume-color-accent);
+  font-weight: 800;
+  font-size: 2.25em;
+  letter-spacing: -0.02em;
+}
+
+.template-creative-accent .resume-headline {
+  font-weight: 600;
+  font-size: 1.1em;
+  margin-top: 3px;
+}
+
+.template-creative-accent .resume-section-title {
+  border-bottom: 2px solid var(--resume-color-accent);
+  color: var(--resume-color-accent);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding-bottom: 2px;
+}
+
+.template-creative-accent .resume-sheet ul {
+  padding-left: 1.25em;
+}
+
+.template-creative-accent .skill-tag {
+  background-color: var(--resume-color-accent);
+  color: #ffffff;
+  border-radius: 9999px;
+  font-weight: 600;
+  border: none;
+  padding: 2px 9px;
+  font-size: 0.85em;
+}

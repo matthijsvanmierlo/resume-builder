@@ -1,0 +1,78 @@
+/* Template 9: Nordic Clean (Accessible & Airy) */
+.template-nordic-clean {
+  font-family: var(--resume-font-primary);
+}
+
+.template-nordic-clean .resume-header {
+  border-left: 4px solid var(--resume-color-accent);
+  padding-left: 14px;
+  margin-bottom: calc(var(--resume-section-gap) * 1.1);
+}
+
+.template-nordic-clean .resume-name {
+  font-family: var(--resume-font-header);
+  font-size: 2.15em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--resume-color-ink);
+  line-height: 1.15;
+}
+
+.template-nordic-clean .resume-headline {
+  color: var(--resume-color-accent);
+  font-weight: 600;
+  font-size: 1.05em;
+  margin-top: 3px;
+  letter-spacing: 0.01em;
+}
+
+.template-nordic-clean .resume-contact-bar {
+  margin-top: 8px;
+  gap: 10px;
+  font-size: 0.9em;
+}
+
+.template-nordic-clean .resume-section-title {
+  font-family: var(--resume-font-header);
+  background-color: var(--resume-color-accent-tint);
+  color: var(--resume-color-accent);
+  border-bottom: none;
+  border-radius: 9999px;
+  padding: 3px 12px;
+  display: inline-block;
+  font-size: 0.92em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: var(--resume-section-gap);
+  margin-bottom: var(--resume-item-gap);
+}
+
+.template-nordic-clean .resume-item {
+  margin-bottom: calc(var(--resume-item-gap) * 1.15);
+}
+
+.template-nordic-clean .entry-title {
+  font-weight: 700;
+  font-size: 1.04em;
+  color: var(--resume-color-ink);
+}
+
+.template-nordic-clean .entry-org {
+  color: var(--resume-color-accent);
+  font-weight: 600;
+}
+
+.template-nordic-clean .resume-sheet ul {
+  padding-left: 1.25em;
+}
+
+.template-nordic-clean .skill-tag {
+  background-color: var(--resume-color-accent-tint);
+  color: var(--resume-color-accent);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 9999px;
+  padding: 2px 10px;
+  font-size: 0.86em;
+  font-weight: 500;
+}

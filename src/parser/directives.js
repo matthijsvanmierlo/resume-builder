@@ -1,0 +1,252 @@
+/**
+ * Extended Resume Shorthands and Directives Pre-processor
+ */
+
+const DATE_REGEX = /(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?|\b\d{4}\b)[\s\S]*?(?:Present|Current|Now|\b\d{4}\b)/i;
+
+/**
+ * Pre-processes markdown source text before CommonMark tokenization.
+ * Transforms custom container directives into HTML-safe tokens or structures.
+ */
+export function preprocessDirectives(markdownText = '') {
+  let text = markdownText;
+
+  // 1. Process Container Directives: ::: columns N ... :::
+  text = text.replace(/:::\s*(?:layout-)?columns\s*(\d+)?\s*\n([\s\S]*?)\n:::/g, (match, countStr, content) => {
+    const cols = parseInt(countStr, 10) || 2;
+    // Split by ||| if present, or split into columns
+    const rawCols = content.split(/\n\s*\|\|\|\s*\n/);
+    const colDivs = rawCols.map(col => `<div class="resume-column">\n\n${col.trim()}\n\n</div>`).join('\n');
+    return `<div class="resume-columns resume-columns-${cols}" style="--col-count: ${cols};">\n${colDivs}\n</div>`;
+  });
+
+  // 2. Process Single-line ::: date-right Left | Right :::
+  text = text.replace(/:::\s*date-right\s+(.*?)\s*\|\s*(.*?)\s*:::/g, (match, left, right) => {
+    return `<div class="resume-date-row"><span class="date-row-left">${left.trim()}</span><span class="date-row-right">${right.trim()}</span></div>`;
+  });
+
+  // 3. Process Explicit ::: sidebar ... :::
+  text = text.replace(/:::\s*sidebar\s*\n([\s\S]*?)\n:::/g, (match, content) => {
+    return `<aside class="resume-sidebar-content">\n\n${content.trim()}\n\n</aside>`;
+  });
+
+  // 4. Process Skill Directives: ::skills Category: [tag1, tag2] or ::skills [tag1, tag2]
+  text = text.replace(/^::skills\s*(?:([^:\[\n]+):)?\s*\[(.*?)\]\s*$/gm, (match, category, tags) => {
+    return renderSkillCapsules(category, tags);
+  });
+
+  // 5. Process Standalone Bracketed Tag Line: [tag1, tag2, tag3]
+  // Matches line starting with [ and ending with ], containing commas
+  text = text.replace(/^\[([a-zA-Z0-9\s.,+#\-_/()&]{2,})\]\s*$/gm, (match, inner) => {
+    if (inner.includes(',')) {
+      return renderSkillCapsules('', inner);
+    }
+    return match; // Normal markdown link or bracket if no comma
+  });
+
+  // 6. Process Explicit Manual Page Breaks: ::: page-break, ::pagebreak, \pagebreak
+  text = text.replace(/^(?:::* *(?:page-?break|pagebreak)|\s*\\pagebreak)\s*$/gmi, () => {
+    return '\n<div class="resume-manual-page-break" role="separator" aria-label="Manual Page Break"></div>\n';
+  });
+
+  return text;
+}
+
+function renderSkillCapsules(category = '', tagsString = '') {
+  const cat = category ? category.trim() : '';
+  const tags = tagsString
+    .split(',')
+    .map(t => t.trim())
+    .filter(Boolean);
+
+  let html = `<div class="resume-skills-group">`;
+  if (cat) {
+    html += `<span class="skills-category">${escapeHtml(cat)}:</span> `;
+  }
+  html += `<ul class="resume-skill-tags" aria-label="Skills">`;
+  for (const tag of tags) {
+    html += `<li class="skill-tag">${escapeHtml(tag)}</li>`;
+  }
+  html += `</ul></div>`;
+  return html;
+}
+
+/**
+ * Parses pipe-delimited role/entry headers: `### Title | Org | Location | Dates`
+ * Returns structured representation or semantic HTML.
+ */
+export function parseEntryHeader(rawHeaderText) {
+  // rawHeaderText without leading ###
+  const segments = rawHeaderText.split('|').map(s => s.trim()).filter(Boolean);
+
+  let title = '';
+  let org = '';
+  let location = '';
+  let date = '';
+
+  if (segments.length === 4) {
+    title = segments[0];
+    org = segments[1];
+    // Check if segment 3 is date or location
+    if (DATE_REGEX.test(segments[2]) && !DATE_REGEX.test(segments[3])) {
+      date = segments[2];
+      location = segments[3];
+    } else {
+      location = segments[2];
+      date = segments[3];
+    }
+  } else if (segments.length === 3) {
+    title = segments[0];
+    org = segments[1];
+    date = segments[2];
+  } else if (segments.length === 2) {
+    title = segments[0];
+    date = segments[1];
+  } else {
+    title = rawHeaderText;
+  }
+
+  const ariaLabel = [title, org, date, location].filter(Boolean).join(', ');
+
+  let primary = `<h3 class="entry-title">${escapeHtml(title)}</h3>`;
+  if (org) {
+    primary += `<span class="entry-sep" aria-hidden="true">•</span><span class="entry-org">${escapeHtml(org)}</span>`;
+  }
+
+  let meta = '';
+  if (location) {
+    meta += `<span class="entry-location">${escapeHtml(location)}</span>`;
+  }
+  if (date) {
+    meta += `<span class="entry-date">${escapeHtml(date)}</span>`;
+  }
+
+  const html = `<div class="resume-entry-header" role="group" aria-label="${escapeHtml(ariaLabel)}">
+  <div class="entry-header-primary">${primary}</div>
+  <div class="entry-header-meta">${meta}</div>
+</div>`;
+
+  return {
+    title,
+    org,
+    location,
+    date,
+    html
+  };
+}
+
+/**
+ * Post-processes HTML generated by marked to:
+ * 1. Wrap each `resume-entry-header` and its following content in `<article class="resume-item" style="break-inside: avoid;">`
+ * 2. Add `break-after: avoid` and semantic IDs to section headings (h2)
+ * 3. Handle split-sidebar routing if template uses sidebar
+ */
+export function postprocessHtml(renderedHtml, config = {}) {
+  // Use DOMParser if in browser environment
+  if (typeof DOMParser === 'undefined') {
+    return renderedHtml;
+  }
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(`<div>${renderedHtml}</div>`, 'text/html');
+  const container = doc.body.firstElementChild;
+
+  // Add classes & attributes to h2 section headers
+  const h2Headers = container.querySelectorAll('h2');
+  h2Headers.forEach(h2 => {
+    h2.classList.add('resume-section-title');
+    h2.style.breakAfter = 'avoid';
+    h2.style.pageBreakAfter = 'avoid';
+    const text = h2.textContent.trim().toLowerCase();
+    h2.setAttribute('data-section', text);
+  });
+
+  // Group ### items into <article class="resume-item" style="break-inside: avoid;">
+  const entryHeaders = container.querySelectorAll('.resume-entry-header');
+  entryHeaders.forEach(header => {
+    const article = doc.createElement('article');
+    article.className = 'resume-item';
+    article.style.breakInside = 'avoid';
+    article.style.pageBreakInside = 'avoid';
+
+    // Insert article before header
+    header.parentNode.insertBefore(article, header);
+    article.appendChild(header);
+
+    // Collect siblings until next header or next section
+    let next = article.nextSibling;
+    while (next) {
+      if (
+        next.nodeType === 1 &&
+        (next.tagName === 'H2' ||
+          next.classList?.contains('resume-entry-header') ||
+          next.querySelector?.('.resume-entry-header') ||
+          next.classList?.contains('resume-columns') ||
+          next.classList?.contains('resume-manual-page-break') ||
+          next.classList?.contains('resume-section-title'))
+      ) {
+        break;
+      }
+      const siblingToMove = next;
+      next = next.nextSibling;
+      article.appendChild(siblingToMove);
+    }
+  });
+
+  // If template is split-sidebar, route sidebar-worthy sections into aside or two-column slots
+  if (config.template === 'split-sidebar') {
+    partitionSidebarSections(container, doc);
+  }
+
+  return container.innerHTML;
+}
+
+const SIDEBAR_SECTION_NAMES = ['skills', 'education', 'certifications', 'languages', 'interests', 'awards', 'contact'];
+
+function partitionSidebarSections(container, doc) {
+  // If already partitioned by ::: sidebar, do nothing
+  if (container.querySelector('.resume-split-layout')) return;
+
+  const sidebarSections = [];
+  const mainSections = [];
+
+  let currentTarget = mainSections;
+  const childNodes = Array.from(container.childNodes);
+
+  childNodes.forEach(node => {
+    if (node.nodeType === 1 && node.tagName === 'H2') {
+      const title = node.textContent.trim().toLowerCase();
+      const isSidebar = SIDEBAR_SECTION_NAMES.some(name => title.includes(name));
+      currentTarget = isSidebar ? sidebarSections : mainSections;
+    }
+    currentTarget.push(node);
+  });
+
+  if (sidebarSections.length > 0) {
+    const layout = doc.createElement('div');
+    layout.className = 'resume-split-layout';
+
+    const sidebarCol = doc.createElement('aside');
+    sidebarCol.className = 'resume-split-sidebar';
+    sidebarSections.forEach(n => sidebarCol.appendChild(n));
+
+    const mainCol = doc.createElement('main');
+    mainCol.className = 'resume-split-main';
+    mainSections.forEach(n => mainCol.appendChild(n));
+
+    layout.appendChild(sidebarCol);
+    layout.appendChild(mainCol);
+    container.innerHTML = '';
+    container.appendChild(layout);
+  }
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}

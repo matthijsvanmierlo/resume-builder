@@ -1,0 +1,60 @@
+/* Template 3: Executive Compact */
+.template-executive-compact .resume-header {
+  border-top: 4px solid var(--resume-color-accent);
+  padding-top: 10px;
+  margin-bottom: calc(var(--resume-section-gap) * 0.9);
+}
+
+.template-executive-compact .resume-name {
+  font-family: var(--resume-font-header);
+  font-size: 2.05em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--resume-color-ink);
+}
+
+.template-executive-compact .resume-headline {
+  color: var(--resume-color-accent);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.95em;
+  margin-top: 2px;
+}
+
+.template-executive-compact .resume-section-title {
+  background-color: var(--resume-color-accent-tint);
+  border-bottom: 2px solid var(--resume-color-accent);
+  padding: 3px 6px;
+  margin-left: -6px;
+  margin-right: -6px;
+  font-size: 1.05em;
+  font-weight: 700;
+  border-radius: 2px;
+}
+
+.template-executive-compact .entry-title {
+  font-weight: 700;
+  color: var(--resume-color-ink);
+}
+
+.template-executive-compact .entry-org {
+  color: var(--resume-color-accent);
+  font-weight: 600;
+}
+
+.template-executive-compact strong {
+  color: var(--resume-color-accent);
+  font-weight: 700;
+}
+
+.template-executive-compact .resume-sheet ul {
+  padding-left: 1.2em;
+}
+
+.template-executive-compact .skill-tag {
+  border-radius: 3px;
+  padding: 1px 6px;
+  font-size: 0.85em;
+  font-weight: 600;
+}

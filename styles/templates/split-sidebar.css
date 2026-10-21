@@ -1,0 +1,55 @@
+/* Template 4: Split Left Sidebar */
+.template-split-sidebar .resume-split-layout {
+  display: grid;
+  grid-template-columns: 32% 68%;
+  gap: 20px;
+  align-items: start;
+}
+
+.template-split-sidebar .resume-split-sidebar {
+  background-color: var(--resume-color-accent-tint);
+  padding: 12px 14px;
+  border-radius: 6px;
+  border-left: 3.5px solid var(--resume-color-accent);
+}
+
+.template-split-sidebar .resume-split-sidebar .resume-section-title {
+  border-bottom: 1.5px solid var(--resume-color-accent);
+  font-size: 0.95em;
+  margin-top: calc(var(--resume-section-gap) * 0.7);
+  margin-bottom: calc(var(--resume-item-gap) * 0.8);
+  padding-bottom: 2px;
+}
+
+.template-split-sidebar .resume-split-sidebar .resume-section-title:first-child {
+  margin-top: 0;
+}
+
+.template-split-sidebar .resume-split-sidebar .resume-item {
+  margin-bottom: calc(var(--resume-item-gap) * 0.8);
+}
+
+.template-split-sidebar .resume-split-sidebar .resume-entry-header {
+  flex-direction: column;
+  gap: 2px;
+}
+
+.template-split-sidebar .resume-split-sidebar .entry-header-meta {
+  font-size: 0.85em;
+}
+
+.template-split-sidebar .resume-split-sidebar ul {
+  padding-left: 1.1em;
+}
+
+.template-split-sidebar .resume-split-main {
+  min-width: 0;
+}
+
+.template-split-sidebar .resume-split-main .resume-section-title:first-child {
+  margin-top: 0;
+}
+
+.template-split-sidebar .resume-split-main ul {
+  padding-left: 1.25em;
+}

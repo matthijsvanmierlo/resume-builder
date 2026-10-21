@@ -1,0 +1,80 @@
+/* Template 10: Modern Timeline */
+.template-modern-timeline {
+  font-family: var(--resume-font-primary);
+}
+
+.template-modern-timeline .resume-header {
+  border-bottom: 2px solid var(--resume-color-accent);
+  padding-bottom: 12px;
+  margin-bottom: var(--resume-section-gap);
+}
+
+.template-modern-timeline .resume-name {
+  font-family: var(--resume-font-header);
+  font-size: 2.2em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--resume-color-accent);
+}
+
+.template-modern-timeline .resume-headline {
+  font-size: 1.05em;
+  font-weight: 600;
+  color: var(--resume-color-muted);
+  margin-top: 2px;
+}
+
+.template-modern-timeline .resume-section-title {
+  font-family: var(--resume-font-header);
+  font-size: 1.05em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1.5px solid var(--resume-color-accent);
+  padding-bottom: 3px;
+  margin-top: var(--resume-section-gap);
+  margin-bottom: var(--resume-item-gap);
+}
+
+/* Vertical Timeline Track on Resume Items */
+.template-modern-timeline .resume-item {
+  position: relative;
+  border-left: 2px solid var(--resume-color-accent-tint);
+  padding-left: 14px;
+  margin-left: 6px;
+  margin-bottom: calc(var(--resume-item-gap) * 1.1);
+}
+
+.template-modern-timeline .resume-item::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--resume-color-accent);
+  box-shadow: 0 0 0 2px var(--resume-color-canvas);
+}
+
+.template-modern-timeline .entry-title {
+  font-weight: 700;
+  font-size: 1.02em;
+  color: var(--resume-color-ink);
+}
+
+.template-modern-timeline .entry-org {
+  font-weight: 600;
+  color: var(--resume-color-accent);
+}
+
+.template-modern-timeline .resume-sheet ul {
+  padding-left: 1.2em;
+}
+
+.template-modern-timeline .skill-tag {
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-size: 0.85em;
+  font-weight: 500;
+}

@@ -1,0 +1,89 @@
+/* Template 2: Classic Ivy */
+.template-classic-ivy {
+  font-family: var(--resume-font-primary);
+}
+
+.template-classic-ivy .resume-header {
+  text-align: center;
+  border-bottom: 1.5px solid var(--resume-color-ink);
+  padding-bottom: 12px;
+  margin-bottom: var(--resume-section-gap);
+}
+
+.template-classic-ivy .resume-name {
+  font-family: var(--resume-font-header);
+  font-weight: 700;
+  font-size: 2.25em;
+  letter-spacing: 0.03em;
+  color: var(--resume-color-ink);
+  margin-bottom: 4px;
+}
+
+.template-classic-ivy .resume-headline {
+  font-style: italic;
+  font-size: 1.05em;
+  margin-top: 2px;
+  color: var(--resume-color-muted);
+}
+
+.template-classic-ivy .resume-contact-bar {
+  justify-content: center;
+  font-size: 0.9em;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.template-classic-ivy .resume-summary {
+  text-align: justify;
+  text-justify: inter-word;
+  margin-top: 10px;
+  line-height: var(--resume-line-height);
+}
+
+.template-classic-ivy .resume-section-title {
+  font-family: var(--resume-font-header);
+  text-align: center;
+  font-size: 1.15em;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--resume-color-ink);
+  padding-bottom: 2px;
+  margin-top: var(--resume-section-gap);
+  margin-bottom: var(--resume-item-gap);
+}
+
+.template-classic-ivy .entry-title {
+  font-weight: 700;
+  font-family: var(--resume-font-header);
+  font-size: 1.08em;
+}
+
+.template-classic-ivy .entry-org {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--resume-color-ink);
+}
+
+.template-classic-ivy .entry-location {
+  font-style: italic;
+}
+
+.template-classic-ivy .resume-sheet ul {
+  padding-left: 1.3em;
+}
+
+.template-classic-ivy .skill-tag {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--resume-color-ink);
+  font-weight: normal;
+  font-size: 0.92em;
+}
+
+.template-classic-ivy .skill-tag::after {
+  content: ', ';
+}
+
+.template-classic-ivy .skill-tag:last-child::after {
+  content: '';
+}

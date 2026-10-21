@@ -1,0 +1,441 @@
+/* preview-engine.css: 1:1 Physical Paper Preview, Scoped CSS Variables & Page Boundaries */
+
+#resume-preview-root {
+  --resume-paper-width: 8.5in;
+  --resume-paper-height: 11in;
+  --resume-margin: 0.5in;
+  --resume-font-size: 10pt;
+  --resume-line-height: 1.30;
+  --resume-section-gap: 14px;
+  --resume-item-gap: 6px;
+  --resume-bullet-gap: 3px;
+  --resume-font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --resume-font-header: 'Merriweather', Georgia, serif;
+  --resume-font-mono: 'JetBrains Mono', monospace;
+  --resume-color-ink: #111827;
+  --resume-color-muted: #4b5563;
+  --resume-color-accent: #1e3a8a;
+  --resume-color-accent-tint: rgba(30, 58, 138, 0.08);
+  --resume-color-canvas: #ffffff;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  background: transparent;
+  min-height: auto;
+  box-sizing: border-box;
+  transform-origin: top center;
+  transition: transform 0.15s ease-out;
+}
+
+.preview-canvas-wrapper {
+  position: relative;
+  width: var(--resume-paper-width);
+}
+
+/* Simulated Physical Paper Sheet */
+.resume-sheet {
+  position: relative;
+  width: var(--resume-paper-width);
+  min-height: var(--resume-paper-height);
+  background-color: var(--resume-color-canvas);
+  color: var(--resume-color-ink);
+  font-family: var(--resume-font-primary);
+  font-size: var(--resume-font-size);
+  line-height: var(--resume-line-height);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 20px 35px -5px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  padding: var(--resume-margin);
+  margin-bottom: 32px;
+  border-radius: 2px;
+}
+
+/* Page Break Spacer & Divider Overlays in Live Preview */
+.page-break-spacer {
+  display: block;
+  width: 100%;
+  pointer-events: none;
+  background: transparent;
+  box-sizing: border-box;
+}
+
+.resume-manual-page-break {
+  display: block;
+  height: 0;
+  margin: 0;
+  border: none;
+}
+
+.page-break-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: var(--bg-preview-viewport, #0f172a);
+  border-top: 1px dashed rgba(239, 68, 68, 0.6);
+  border-bottom: 1px dashed rgba(239, 68, 68, 0.6);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-break-overlay::before {
+  content: attr(data-label);
+  position: relative;
+  background-color: #ef4444;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  text-transform: uppercase;
+}
+
+/* General Typography inside Resume */
+.resume-sheet h1,
+.resume-sheet h2,
+.resume-sheet h3,
+.resume-sheet h4 {
+  font-family: var(--resume-font-header);
+  color: var(--resume-color-ink);
+  margin: 0;
+  font-weight: 700;
+}
+
+.resume-header {
+  margin-bottom: var(--resume-section-gap);
+}
+
+.resume-name {
+  font-size: 1.9em;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--resume-color-accent);
+}
+
+.resume-headline {
+  font-size: 1.15em;
+  font-weight: 500;
+  color: var(--resume-color-muted);
+  margin-top: 2px;
+}
+
+.resume-contact-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 0.9em;
+  color: var(--resume-color-muted);
+}
+
+.resume-contact-bar a {
+  color: var(--resume-color-muted);
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.resume-contact-bar a:hover {
+  color: var(--resume-color-accent);
+  border-bottom-color: var(--resume-color-accent);
+}
+
+.contact-sep {
+  opacity: 0.5;
+}
+
+.resume-summary {
+  margin-top: 8px;
+  margin-bottom: 0;
+  color: var(--resume-color-ink);
+  font-size: 0.95em;
+  line-height: var(--resume-line-height);
+}
+
+/* Section Titles (h2) */
+.resume-section-title {
+  font-size: 1.18em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1.5px solid var(--resume-color-accent);
+  padding-bottom: 3px;
+  margin-top: var(--resume-section-gap);
+  margin-bottom: var(--resume-item-gap);
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+.resume-body > .resume-section-title:first-child,
+.resume-body > section:first-child .resume-section-title:first-child,
+.resume-split-main > .resume-section-title:first-child,
+.resume-split-sidebar > .resume-section-title:first-child {
+  margin-top: 0 !important;
+}
+
+/* Individual Role / Entry (article.resume-item) */
+.resume-item {
+  margin-bottom: var(--resume-item-gap);
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.resume-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Role / Degree Header */
+.resume-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 3px;
+}
+
+.entry-header-primary {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.entry-title {
+  font-size: 1.02em;
+  font-weight: 600;
+  color: var(--resume-color-ink);
+}
+
+.entry-sep {
+  color: var(--resume-color-muted);
+  font-size: 0.85em;
+}
+
+.entry-org {
+  font-weight: 600;
+  color: var(--resume-color-accent);
+}
+
+.entry-header-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 0.9em;
+  color: var(--resume-color-muted);
+  white-space: nowrap;
+}
+
+.entry-date {
+  font-family: var(--resume-font-mono);
+  font-weight: 500;
+}
+
+/* Bullet Lists */
+.resume-sheet ul {
+  margin: 0;
+  padding-left: 1.25em;
+}
+
+.resume-sheet li {
+  margin-bottom: var(--resume-bullet-gap);
+  line-height: var(--resume-line-height);
+}
+
+.resume-sheet li:last-child {
+  margin-bottom: 0;
+}
+
+.resume-sheet p {
+  margin-top: 0;
+  margin-bottom: var(--resume-bullet-gap);
+  line-height: var(--resume-line-height);
+}
+
+/* Skill Tags & Capsules */
+.resume-skills-group {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: var(--resume-item-gap);
+}
+
+.skills-category {
+  font-weight: 600;
+  color: var(--resume-color-ink);
+  font-size: 0.95em;
+}
+
+.resume-skill-tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+
+.skill-tag {
+  display: inline-block;
+  background-color: var(--resume-color-accent-tint);
+  color: var(--resume-color-accent);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-size: 0.86em;
+  font-weight: 500;
+  line-height: 1.35;
+  margin-bottom: 0 !important;
+}
+
+/* Multi-Column Directive */
+.resume-columns {
+  display: grid;
+  grid-template-columns: repeat(var(--col-count, 2), 1fr);
+  gap: 16px;
+  margin-bottom: var(--resume-item-gap);
+}
+
+.resume-column {
+  min-width: 0;
+}
+
+/* Date Row */
+.resume-date-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 3px;
+}
+
+/* ==========================================================================
+   Modular Style & Layout Customizations (Scoped to #resume-preview-root)
+   ========================================================================== */
+
+/* 1. Header Layout Alignment */
+#resume-preview-root[data-header-align="left"] .resume-header {
+  text-align: left;
+}
+#resume-preview-root[data-header-align="left"] .resume-contact-bar {
+  justify-content: flex-start;
+}
+
+#resume-preview-root[data-header-align="center"] .resume-header {
+  text-align: center;
+}
+#resume-preview-root[data-header-align="center"] .resume-contact-bar {
+  justify-content: center;
+}
+
+#resume-preview-root[data-header-align="split"] .resume-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+#resume-preview-root[data-header-align="split"] .resume-contact-bar {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+#resume-preview-root[data-header-align="split"] .resume-summary {
+  width: 100%;
+}
+
+/* 2. Section Heading Dividers */
+#resume-preview-root[data-section-style="underline"] .resume-section-title {
+  border-bottom: 2px solid var(--resume-color-accent);
+  background: transparent;
+  padding-left: 0;
+  border-left: none;
+}
+
+#resume-preview-root[data-section-style="thick-bar"] .resume-section-title {
+  background-color: var(--resume-color-accent-tint);
+  border-bottom: none;
+  border-left: 4px solid var(--resume-color-accent);
+  padding: 4px 8px;
+  border-radius: 2px;
+}
+
+#resume-preview-root[data-section-style="left-accent"] .resume-section-title {
+  border-left: 4px solid var(--resume-color-accent);
+  border-bottom: none;
+  padding-left: 8px;
+  background: transparent;
+}
+
+#resume-preview-root[data-section-style="double-line"] .resume-section-title {
+  border-bottom: 3px double var(--resume-color-accent);
+  background: transparent;
+  border-left: none;
+  padding-left: 0;
+}
+
+#resume-preview-root[data-section-style="minimal"] .resume-section-title {
+  border-bottom: none;
+  border-left: none;
+  background: transparent;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  padding-left: 0;
+}
+
+/* 3. Skill Tag Styles */
+#resume-preview-root[data-skill-style="pill"] .skill-tag {
+  border-radius: 9999px !important;
+  padding: 2px 10px !important;
+  font-size: 0.85em;
+}
+
+#resume-preview-root[data-skill-style="badge"] .skill-tag {
+  border-radius: 3px !important;
+  padding: 2px 6px !important;
+  font-size: 0.84em;
+}
+
+#resume-preview-root[data-skill-style="outlined"] .skill-tag {
+  background: transparent !important;
+  border: 1.5px solid var(--resume-color-accent) !important;
+  color: var(--resume-color-accent) !important;
+  border-radius: 4px !important;
+  padding: 1px 7px !important;
+}
+
+#resume-preview-root[data-skill-style="inline"] .skill-tag {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: var(--resume-color-ink) !important;
+  border-radius: 0 !important;
+  font-weight: normal;
+}
+#resume-preview-root[data-skill-style="inline"] .skill-tag::after {
+  content: ", ";
+}
+#resume-preview-root[data-skill-style="inline"] .skill-tag:last-child::after {
+  content: "";
+}
+
+/* 4. Bullet Styles */
+#resume-preview-root[data-bullet-style="disc"] .resume-sheet ul {
+  list-style-type: disc !important;
+}
+#resume-preview-root[data-bullet-style="square"] .resume-sheet ul {
+  list-style-type: square !important;
+}
+#resume-preview-root[data-bullet-style="arrow"] .resume-sheet ul {
+  list-style-type: '▸ ' !important;
+}
+#resume-preview-root[data-bullet-style="dash"] .resume-sheet ul {
+  list-style-type: '– ' !important;
+}
+

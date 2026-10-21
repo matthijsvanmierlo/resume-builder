@@ -1,0 +1,77 @@
+/* Template 12: ATS Ultra-Clean */
+.template-ats-standard {
+  font-family: var(--resume-font-primary);
+}
+
+.template-ats-standard .resume-header {
+  text-align: center;
+  border-bottom: 1.5px solid var(--resume-color-ink);
+  padding-bottom: 10px;
+  margin-bottom: var(--resume-section-gap);
+}
+
+.template-ats-standard .resume-name {
+  font-family: var(--resume-font-header);
+  font-size: 2.1em;
+  font-weight: 700;
+  color: var(--resume-color-ink);
+  letter-spacing: 0.02em;
+}
+
+.template-ats-standard .resume-headline {
+  font-size: 1.05em;
+  font-weight: 500;
+  color: var(--resume-color-muted);
+  margin-top: 2px;
+}
+
+.template-ats-standard .resume-contact-bar {
+  justify-content: center;
+  gap: 10px;
+  margin-top: 6px;
+  font-size: 0.9em;
+}
+
+.template-ats-standard .resume-section-title {
+  font-family: var(--resume-font-header);
+  font-size: 1.08em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--resume-color-ink);
+  color: var(--resume-color-ink);
+  padding-bottom: 2px;
+  margin-top: var(--resume-section-gap);
+  margin-bottom: var(--resume-item-gap);
+}
+
+.template-ats-standard .entry-title {
+  font-weight: 700;
+  font-size: 1.02em;
+  color: var(--resume-color-ink);
+}
+
+.template-ats-standard .entry-org {
+  font-weight: 600;
+  color: var(--resume-color-ink);
+}
+
+.template-ats-standard .resume-sheet ul {
+  padding-left: 1.25em;
+}
+
+.template-ats-standard .skill-tag {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--resume-color-ink);
+  font-weight: normal;
+}
+
+.template-ats-standard .skill-tag::after {
+  content: ', ';
+}
+
+.template-ats-standard .skill-tag:last-child::after {
+  content: '';
+}
